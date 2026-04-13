@@ -1,5 +1,12 @@
 import tensorflow as tf
 from waymo_open_dataset import dataset_pb2
+import torch
+from transformers import Mask2FormerImageProcessor, Mask2FormerForUniversalSegmentation
+from PIL import Image
+import numpy as np
+import depth_pro
+import sys
+sys.path.append('ml-depth-pro')
 
 class WaymoFrameExtractor:
     def __init__(self, tfrecord_path: str):
@@ -51,12 +58,6 @@ class WaymoFrameExtractor:
             return camera_extrinsics
         
 
-
-
-import torch
-from transformers import Mask2FormerImageProcessor, Mask2FormerForUniversalSegmentation
-from PIL import Image
-
 class PanopticSegmenter:
     def __init__(self, device_id: str = None):
         """
@@ -98,22 +99,6 @@ class PanopticSegmenter:
         
         return results
     
-
-
-
-
-
-
-import torch
-import numpy as np
-import depth_pro
-import sys
-
-sys.path.append('ml-depth-pro')
-
-import numpy as np
-import torch
-from PIL import Image
 
 class DepthProEstimator:
     def __init__(self, device_id: str = None):
@@ -174,11 +159,6 @@ class DepthProEstimator:
         
         return dm_clipped
 
-
-
-
-from PIL import Image
-import numpy as np
 
 def save_image(img_array, img_name):
 
