@@ -26,6 +26,30 @@ class WaymoFrameExtractor:
             
         return frame_list
     
+    def get_camera_extrinsics(self, frame: dataset_pb2.Frame) -> dict:
+            """
+            주어진 프레임에서 모든 카메라의 외부 파라미터(Extrinsic parameters)를 추출합니다.
+            
+            Args:
+                frame (dataset_pb2.Frame): 외부 파라미터를 추출할 단일 프레임 객체
+                
+            Returns:
+                dict: 카메라 이름(dataset_pb2.CameraName)을 Key로 하고, 
+                    4x4 변환 행렬(numpy.ndarray)을 Value로 가지는 딕셔너리.
+            """
+            camera_extrinsics = {}
+            
+            # frame.context.camera_calibrations에는 각 카메라의 캘리브레이션 정보가 들어있습니다.
+            for camera_calibration in frame.context.camera_calibrations:
+                camera_name = camera_calibration.name
+                
+                # extrinsic.transform은 길이가 16인 1차원 리스트이므로 4x4 행렬로 변환합니다.
+                extrinsic_matrix = np.array(camera_calibration.extrinsic.transform).reshape(4, 4)
+                
+                camera_extrinsics[camera_name] = extrinsic_matrix
+                
+            return camera_extrinsics
+        
 
 
 
@@ -167,25 +191,49 @@ def save_image(img_array, img_name):
 
 
 if __name__=="__main__":
+    # Waymo Dataset Images, Extrinsic
     wfe = WaymoFrameExtractor('./data/individual_files_validation_segment-10203656353524179475_7625_000_7645_000_with_camera_labels.tfrecord')
-    frame1 = wfe.get_frame_list()[1]
+    frame = wfe.get_frame_list()[1]
 
-    # 1. 전면(FRONT) 카메라 이미지 추출
-    img_array = None
-    for img in frame1.images:
-        if img.name == dataset_pb2.CameraName.FRONT:
-            img_array = tf.io.decode_jpeg(img.image).numpy()
+    # frame 변수에 추출한 첫 번째 프레임이 담겨있다고 가정합니다. (예: frame = frames[0])
+    target_camera = dataset_pb2.CameraName.FRONT
+    front_img_array = None
+    front_extrinsic = None
+
+    # frame.images를 순회하는 단일 for문
+    for img in frame.images:
+        if img.name == target_camera:
+            # 1. 이미지 추출 및 디코딩
+            front_img_array = tf.io.decode_jpeg(img.image).numpy()
+            
+            # 2. frame.context에서 현재 카메라 이름과 일치하는 캘리브레이션 정보 매칭
+            calibration = next(
+                (cal for cal in frame.context.camera_calibrations if cal.name == target_camera), 
+                None
+            )
+            
+            # 3. 캘리브레이션 정보가 존재하면 4x4 Extrinsic 행렬로 변환
+            if calibration:
+                front_extrinsic = np.array(calibration.extrinsic.transform).reshape(4, 4)
+                
+            # 결과 출력
+            print("Front Camera Image Shape:", front_img_array.shape)
+            print("Front Camera Extrinsic Matrix:\n", front_extrinsic)
+            
+            # 원하는 전면 카메라 데이터를 모두 찾았으므로 불필요한 추가 순회를 막기 위해 루프 종료
+            break
+
                 
     ps = PanopticSegmenter()
-    ps_res = ps.segment(img_array)
+    ps_res = ps.segment(front_img_array)
     # print(ps_res) # 딕셔너리 구조 확인용
 
     de = DepthProEstimator()
-    dm = de.get_depth_map(img_array)
+    dm = de.get_depth_map(front_img_array)
     # print(dm)
 
     # ---------------------------------------------------------
-    # 에러 수정 및 이미지 저장 처리 부분
+    # 이미지 저장 처리 부분
     # ---------------------------------------------------------
 
     # 1. Panoptic Segmentation 결과 처리
