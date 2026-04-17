@@ -64,7 +64,7 @@ fi
 
 echo "Installing Gaussian Splatting..."
 cd gaussian-splatting
-pip install submodules/diff-gaussian-rasterization submodules/simple-knn submodules/fused-ssim opencv-python joblib
+pip install submodules/diff-gaussian-rasterization submodules/simple-knn submodules/fused-ssim opencv-python joblib --no-build-isolation
 
 
 
