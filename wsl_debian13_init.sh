@@ -17,3 +17,6 @@ nvcc --version
 
 mkdir StudioProjects;cd StudioProjects;mkdir test;cd test;
 python3 -m venv test
+
+
+#  export XDG_SESSION_TYPE=x11
