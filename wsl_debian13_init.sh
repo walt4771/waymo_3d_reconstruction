@@ -7,7 +7,7 @@ sudo make install
 sudo rm -rf Python-3.12.0.tgz
 sudo rm -rf Python-3.12.0
 
-sudo apt install -y wget libxml2 libx11-6 libgl1 git
+sudo apt install -y wget libxml2 libx11-6 libgl1 git libglib2.0-0
 wget https://developer.download.nvidia.com/compute/cuda/12.4.1/local_installers/cuda_12.4.1_550.54.15_linux.run
 sudo sh cuda_12.4.1_550.54.15_linux.run --silent --toolkit --override
 echo 'export PATH=/usr/local/cuda/bin${PATH:+:${PATH}}' >> ~/.bashrc
