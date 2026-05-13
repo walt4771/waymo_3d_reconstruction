@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sudo apt install libfontconfig1 libegl1 libgl1 libxkbcommon0
+
 # Create venv if it doesn't exist
 if [ ! -d "blender_venv" ]; then
     echo "Creating virtual environment 'blender_venv'..."
@@ -18,7 +20,7 @@ pip install tensorflow==2.16.1 protobuf==3.20.3 matplotlib opencv-python numpy==
 pip install waymo-open-dataset-tf-2-12-0==1.6.7 --no-deps
 
 
-
+pip install PyQt6
 
 
 
