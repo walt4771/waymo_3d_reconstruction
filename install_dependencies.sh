@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo apt install libfontconfig1 libegl1 libgl1 libxkbcommon0
+sudo apt install libfontconfig1 libegl1 libgl1 libxkbcommon0 libxcb-cursor0 libxkbcommon-x11-0 libwayland-client0 libwayland-cursor0
 
 # Create venv if it doesn't exist
 if [ ! -d "blender_venv" ]; then
