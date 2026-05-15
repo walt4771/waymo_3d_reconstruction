@@ -21,13 +21,13 @@ pip install waymo-open-dataset-tf-2-12-0==1.6.7 --no-deps
 
 
 pip install PyQt6
-
+pip install torch==2.5.0 torchvision==0.20.0 --index-url https://download.pytorch.org/whl/cu121
 
 
 # Install Mask2Former dependencies
 echo "Installing Mask2Former dependencies (Transformers, Torch, JAX)..."
 # JAX 0.4.29 is compatible with NumPy 1.26.4
-pip install transformers torch torchvision timm "jax<0.4.30" "jaxlib<0.4.30"
+pip install transformers timm "jax<0.4.30" "jaxlib<0.4.30"
 pip install huggingface-hub # For checkpoint download
 
 
