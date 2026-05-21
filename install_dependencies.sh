@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo apt install libfontconfig1 libegl1 libgl1 libxkbcommon0 libxcb-cursor0 libxkbcommon-x11-0 libwayland-client0 libwayland-cursor0
+sudo apt install -y fonts-nanum
 
 # Create venv if it doesn't exist
 if [ ! -d "blender_venv" ]; then
