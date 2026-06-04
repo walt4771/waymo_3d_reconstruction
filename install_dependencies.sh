@@ -54,7 +54,7 @@ pip install submodules/diff-gaussian-rasterization submodules/simple-knn submodu
 
 
 
-
+pip install matplotlib==3.7.0
 
 
 
